@@ -10,6 +10,8 @@ public interface userDAO {
 
     User createUser(User user);
 
+    User getUserById(int userId);
+
     boolean updateUser(User user);
 
     boolean deleteUser(int userId);

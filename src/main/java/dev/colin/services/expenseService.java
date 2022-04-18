@@ -10,6 +10,8 @@ public interface expenseService {
 
     Expense createExpense(Expense expense);
 
+    Expense getExpenseById(Expense expense);
+
     boolean updateExpense(Expense expense);
 
     boolean deleteExpense(int ExpenseId);

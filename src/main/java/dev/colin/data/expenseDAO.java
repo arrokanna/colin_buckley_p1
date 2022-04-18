@@ -10,6 +10,8 @@ public interface expenseDAO {
 
     Expense createExpense(Expense expense);
 
+    Expense getExpenseById(int expenseId);
+
     boolean updateExpense(Expense expense);
 
     boolean deleteExpense(int expenseId);
