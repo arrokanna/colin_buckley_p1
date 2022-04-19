@@ -3,7 +3,7 @@ package dev.colin.entities;
 public class Expense {
     private int id;
     private int userId;
-    private String Description;
+    private String description;
     private double amount;
     private int status;
 
@@ -24,11 +24,11 @@ public class Expense {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public double getAmount() {

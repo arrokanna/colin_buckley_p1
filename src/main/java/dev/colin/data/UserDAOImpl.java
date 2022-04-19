@@ -2,12 +2,14 @@ package dev.colin.data;
 
 import dev.colin.entities.User;
 import dev.colin.utilities.ConnectionUtil;
+import dev.colin.utilities.LogLevel;
+import dev.colin.utilities.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl implements userDAO {
+public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsers() {
@@ -15,7 +17,8 @@ public class UserDAOImpl implements userDAO {
         try {
             Connection conn = ConnectionUtil.createConnection();
             String sql = "select *\n" +
-                    "from users";
+                    "from users\n" +
+                    "order by user_id";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -33,6 +36,9 @@ public class UserDAOImpl implements userDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "getUsers()";
+            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
             return null;
         }
 
@@ -58,14 +64,22 @@ public class UserDAOImpl implements userDAO {
                 newUser.setId(rs.getInt("user_id"));
                 newUser.setFirstName(rs.getString("first_name"));
                 newUser.setLastName(rs.getString("last_name"));
+                return newUser;
+            } else {
+                String message = "Failed to create user";
+                String method = "createUser(User: " + user + ")";
+                Logger.Log(message,LogLevel.Warning,method,"UserDAOImpl");
+                return null;
             }
 
-            return newUser;
+
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "createUser(User: " + user.toString() + ")";
+            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
             return null;
-
         }
 
     }
@@ -88,12 +102,19 @@ public class UserDAOImpl implements userDAO {
                 user.setId(rs.getInt("user_id"));
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
+                return user;
+            } else {
+                String message = "SQL query returned no results";
+                String method = "getUserById(int: " + userId + ")";
+                Logger.Log(message,LogLevel.Info,method,"UserDAOImpl");
+                return null;
             }
-
-            return user;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "getUserById(int: " + userId + ")";
+            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
             return null;
         }
 
@@ -119,6 +140,9 @@ public class UserDAOImpl implements userDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "updateUser(User: " + user.toString() + ")";
+            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
             return false;
         }
 
@@ -140,6 +164,9 @@ public class UserDAOImpl implements userDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "deleteUser(int: " + userId + ")";
+            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
             return false;
         }
 
