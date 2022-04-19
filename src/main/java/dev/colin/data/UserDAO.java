@@ -4,7 +4,7 @@ import dev.colin.entities.User;
 
 import java.util.List;
 
-public interface UserDAO {
+public interface userDAO {
 
     List<User> getUsers();
 

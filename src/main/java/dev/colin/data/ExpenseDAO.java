@@ -4,7 +4,7 @@ import dev.colin.entities.Expense;
 
 import java.util.List;
 
-public interface ExpenseDAO {
+public interface expenseDAO {
 
     List<Expense> allExpenses();
 
