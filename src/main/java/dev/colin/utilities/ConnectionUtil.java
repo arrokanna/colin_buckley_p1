@@ -13,6 +13,9 @@ public class ConnectionUtil {
             return conn;
         } catch (SQLException e) {
             e.printStackTrace();
+            String message = e.getMessage();
+            String method = "createConnection()";
+            Logger.log(message, LogLevel.ERROR,method,"ConnectionUtil");
             return null;
         }
 

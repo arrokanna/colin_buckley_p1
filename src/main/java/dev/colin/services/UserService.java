@@ -1,6 +1,6 @@
 package dev.colin.services;
 
-import dev.colin.entities.CheckBoolean;
+import dev.colin.utilities.CheckBoolean;
 import dev.colin.entities.User;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package dev.colin.service;
 
 import dev.colin.data.UserDAOImpl;
-import dev.colin.entities.CheckBoolean;
+import dev.colin.utilities.CheckBoolean;
 import dev.colin.entities.User;
 import dev.colin.services.UserService;
 import dev.colin.services.UserServiceImpl;

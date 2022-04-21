@@ -38,7 +38,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "getUsers()";
-            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
+            Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
             return null;
         }
 
@@ -68,7 +68,7 @@ public class UserDAOImpl implements UserDAO {
             } else {
                 String message = "Failed to create user";
                 String method = "createUser(User: " + user + ")";
-                Logger.Log(message,LogLevel.Warning,method,"UserDAOImpl");
+                Logger.log(message,LogLevel.WARNING,method,"UserDAOImpl");
                 return null;
             }
 
@@ -78,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "createUser(User: " + user.toString() + ")";
-            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
+            Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
             return null;
         }
 
@@ -106,7 +106,7 @@ public class UserDAOImpl implements UserDAO {
             } else {
                 String message = "SQL query returned no results";
                 String method = "getUserById(int: " + userId + ")";
-                Logger.Log(message,LogLevel.Info,method,"UserDAOImpl");
+                Logger.log(message,LogLevel.INFO,method,"UserDAOImpl");
                 return null;
             }
 
@@ -114,7 +114,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "getUserById(int: " + userId + ")";
-            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
+            Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
             return null;
         }
 
@@ -142,7 +142,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "updateUser(User: " + user.toString() + ")";
-            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
+            Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
             return false;
         }
 
@@ -166,7 +166,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "deleteUser(int: " + userId + ")";
-            Logger.Log(message,LogLevel.Error,method,"UserDAOImpl");
+            Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
             return false;
         }
 

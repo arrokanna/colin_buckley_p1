@@ -40,7 +40,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "expenses()";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return null;
         }
 
@@ -77,7 +77,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "expenseByUser(int: " + userId + " )";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return null;
         }
 
@@ -110,7 +110,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             } else {
                 String message = "failed to return created expense";
                 String method = "expenseByUser(int: " + expense + " )";
-                Logger.Log(message, LogLevel.Warning,method,"ExpenseDAOImpl");
+                Logger.log(message, LogLevel.WARNING,method,"ExpenseDAOImpl");
                 return null;
             }
 
@@ -118,7 +118,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "expenseByUser(int: " + expense.toString() + " )";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return null;
         }
 
@@ -148,7 +148,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             } else {
                 String message = "failed to retrieve expense";
                 String method = "getExpenseById(int: " + expenseId + ")";
-                Logger.Log(message, LogLevel.Warning,method,"ExpenseDAOImpl");
+                Logger.log(message, LogLevel.WARNING,method,"ExpenseDAOImpl");
                 return null;
             }
 
@@ -156,7 +156,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "getExpenseById(int: " + expenseId + ")";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return null;
         }
 
@@ -187,7 +187,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "updateExpense(Expense: " + expense.toString() + " )";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return false;
         }
 
@@ -210,7 +210,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             e.printStackTrace();
             String message = e.getMessage();
             String method = "deleteExpense(int: " + expenseId + " )";
-            Logger.Log(message, LogLevel.Error,method,"ExpenseDAOImpl");
+            Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
             return false;
         }
 

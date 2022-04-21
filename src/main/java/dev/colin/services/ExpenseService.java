@@ -1,6 +1,8 @@
 package dev.colin.services;
 
+import dev.colin.utilities.CheckBoolean;
 import dev.colin.entities.Expense;
+import dev.colin.utilities.CheckExpense;
 
 import java.util.List;
 
@@ -8,12 +10,12 @@ public interface ExpenseService {
 
     List<Expense> getExpenses();
 
-    Expense createExpense(Expense expense);
+    CheckExpense createExpense(Expense expense);
 
-    Expense getExpenseById(Expense expense);
+    Expense getExpenseById(int expenseId);
 
-    boolean updateExpense(Expense expense);
+    CheckBoolean updateExpense(Expense expense);
 
-    boolean deleteExpense(int ExpenseId);
+    CheckBoolean deleteExpense(int expenseId);
 
 }
