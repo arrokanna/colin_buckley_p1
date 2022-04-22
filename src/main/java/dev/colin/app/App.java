@@ -11,14 +11,17 @@ import dev.colin.services.ExpenseServiceImpl;
 import dev.colin.services.UserService;
 import dev.colin.services.UserServiceImpl;
 import dev.colin.utilities.CheckExpense;
+import dev.colin.utilities.GlobalVariables;
 import io.javalin.Javalin;
 
 import java.util.List;
+import java.util.Map;
 
 public class App {
     static UserService userService = new UserServiceImpl(new UserDAOImpl());
     static ExpenseService expenseService = new ExpenseServiceImpl(new ExpenseDAOImpl());
     static Gson gson = new Gson();
+    static Map<Integer,String> statusCode = GlobalVariables.statusCode;
 
     public static void main(String[] args) {
         Javalin app = Javalin.create();
@@ -40,15 +43,26 @@ public class App {
                     context.result(json);
                 } else {
                     context.status(404);
-                    context.result("no employee found");
+                    context.result(statusCode.get(2));
                 }
             } catch (NumberFormatException exception) {
                 context.status(404);
-                context.result("invalid data type");
+                context.result(statusCode.get(6));
             }
         });
 
-        // need to finish specific searches
+        app.get("/employees/{id}/expenses",context -> {
+            try {
+                int userId = Integer.parseInt(context.pathParam("id"));
+                List<Expense> userExpenses = expenseService.getUserExpenses(userId);
+                String json = gson.toJson(userExpenses);
+                context.result(json);
+            }catch (NumberFormatException exception) {
+                context.status(404);
+                context.result(statusCode.get(6));
+            }
+        });
+
         app.get("/expenses", context -> {
             String status = context.queryParam("status");
 
@@ -60,19 +74,23 @@ public class App {
                 status = status.toLowerCase();
                 switch (status) {
                     case "pending": {
-                        // to implement method
-                        context.result("pending");
+                        List<Expense> pendingExpenseList = expenseService.getExpensesByStatus(1);
+                        String json = gson.toJson(pendingExpenseList);
+                        context.result(json);
                     } break;
                     case "approved": {
-                        // to implement method
-                        context.result("approved");
+                        List<Expense> approvedExpenseList = expenseService.getExpensesByStatus(2);
+                        String json = gson.toJson(approvedExpenseList);
+                        context.result(json);
                     } break;
                     case "denied": {
-                        // to implement method
-                        context.result("denied");
+                        List<Expense> deniedExpenseList = expenseService.getExpensesByStatus(3);
+                        String json = gson.toJson(deniedExpenseList);
+                        context.result(json);
                     } break;
                     default: {
-                        context.result("you done fucked up A-A-RON");
+                        context.status(404);
+                        context.result(statusCode.get(6));
                     }
                 }
             }
@@ -88,11 +106,12 @@ public class App {
                     context.result(json);
                 } else {
                     context.status(404);
-                    context.result("expense not found");
+                    context.result(statusCode.get(3));
                 }
 
             } catch (NumberFormatException exception) {
-                context.result("entered word expected number");
+                context.status(404);
+                context.result(statusCode.get(6));
             }
         });
 
@@ -108,35 +127,51 @@ public class App {
                 context.result("User created: " + json);
             } else {
                 context.status(404);
-                context.result("issue creating user");
+                context.result(statusCode.get(1));
             }
+        });
+
+        app.post("/employees/{id}/expenses", context -> {
+            try {
+                int userId = Integer.parseInt(context.pathParam("id"));
+                String body = context.body();
+                Expense expense = gson.fromJson(body, Expense.class);
+
+                if (userId == expense.getUserId()) {
+                    CheckExpense checkExpense = expenseService.createExpense(expense);
+
+                    if (checkExpense.getExpense() != null) {
+                        context.status(201);
+                        String json = gson.toJson(checkExpense.getExpense());
+                        context.result("expense created: " + json);
+                    } else {
+                        context.status(404);
+                        context.result(statusCode.get(checkExpense.getStatus()));
+                    }
+                } else {
+                    context.status(404);
+                    context.result(statusCode.get(7));
+                }
+            }  catch (NumberFormatException exception) {
+                context.status(404);
+                context.result(statusCode.get(6));
+            }
+
         });
 
         app.post("/expenses", context -> {
             String body = context.body();
             Expense expense = gson.fromJson(body, Expense.class);
+            CheckExpense checkExpense = expenseService.createExpense(expense);
 
-            if (expense.getAmount() >= 0) {
-                CheckExpense checkExpense = expenseService.createExpense(expense);
-
-                if (checkExpense.getExpense() != null) {
-                    context.status(201);
-                    String json = gson.toJson(checkExpense);
-                    context.result("expense created: " + json);
-                } else {
-                    context.status(404);
-                    if (checkExpense.getStatus() == 1) {
-                        context.result("user id does not exist");
-                    } else {
-                        context.result("issue creating expense");
-                    }
-                }
+            if (checkExpense.getExpense() != null) {
+                context.status(201);
+                String json = gson.toJson(checkExpense.getExpense());
+                context.result("expense created: " + json);
             } else {
                 context.status(404);
-                context.result("amount must be greater then 0");
+                context.result(statusCode.get(checkExpense.getStatus()));
             }
-
-
         });
 
         // put methods
@@ -154,20 +189,16 @@ public class App {
                         context.result("employee updated");
                     } else {
                         context.status(404);
-                        if (checkUpdate.getStatus() == 1) {
-                            context.result("no employee found");
-                        } else {
-                            context.result("issue updating employee");
-                        }
+                        context.result(statusCode.get(checkUpdate.getStatus()));
                     }
                 } else {
                     context.status(404);
-                    context.result("input mismatch");
+                    context.result(statusCode.get(7));
                 }
 
             } catch (NumberFormatException exception) {
                 context.status(404);
-                context.result("invalid data type");
+                context.result(statusCode.get(6));
             }
         });
 
@@ -177,35 +208,49 @@ public class App {
                 String body = context.body();
                 Expense expense = gson.fromJson(body,Expense.class);
 
-                if (expense.getAmount() >= 0) {
-                    if (expenseId == expense.getId()) {
-                        CheckBoolean checkUpdate = expenseService.updateExpense(expense);
-
-                        if (checkUpdate.isCheck()) {
-                            context.status(201);
-                            context.result("expense updated");
-                        } else if (checkUpdate.getStatus() == 1) {
-                            context.status(404);
-                            context.result("invalid user id");
-                        } else if (checkUpdate.getStatus() == 2) {
-                            context.status(404);
-                            context.result("invalid expense id");
-                        } else {
-                            context.status(404);
-                            context.result("issue updating expense");
-                        }
-
+                if (expenseId == expense.getId()) {
+                    CheckBoolean checkUpdate = expenseService.updateExpense(expense);
+                    if (checkUpdate.isCheck()) {
+                        context.status(201);
+                        context.result("expense updated");
                     } else {
                         context.status(404);
-                        context.result("input mismatch");
+                        context.result(statusCode.get(checkUpdate.getStatus()));
                     }
                 } else {
                     context.status(404);
-                    context.result("amount must be more then 0");
+                    context.result(statusCode.get(7));
                 }
             } catch (NumberFormatException exception) {
                 context.status(404);
-                context.result("invalid data type");
+                context.result(statusCode.get(6));
+            }
+        });
+
+        //patch
+        app.patch("/expenses/{id}/{status}", context -> {
+            try {
+                int expenseId = Integer.parseInt(context.pathParam("id"));
+                String status = context.pathParam("status");
+                int updateStatus = 0;
+
+                if (status.equals("approve")) {
+                    updateStatus = 2;
+                } else if (status.equals("deny")) {
+                    updateStatus = 3;
+                }
+
+                CheckBoolean approveExpense = expenseService.approveOrDenyExpense(expenseId,updateStatus);
+                if (approveExpense.isCheck()) {
+                    context.status(201);
+                    context.result("Expense was updated");
+                } else {
+                    context.status(404);
+                    context.result(statusCode.get(approveExpense.getStatus()));
+                }
+            } catch (NumberFormatException exception) {
+                context.status(404);
+                context.result(statusCode.get(6));
             }
         });
 
@@ -219,15 +264,11 @@ public class App {
                     context.result("employee was deleted");
                 } else {
                     context.status(404);
-                    if (checkDelete.getStatus() == 1) {
-                        context.result("No employee found");
-                    } else {
-                        context.result("Issue deleting user");
-                    }
+                    context.result(statusCode.get(checkDelete.getStatus()));
                 }
             } catch (NumberFormatException exception) {
                 context.status(404);
-                context.result("invalid data type");
+                context.result(statusCode.get(6));
             }
         });
 
@@ -241,17 +282,11 @@ public class App {
                     context.result("expense was deleted");
                 } else {
                     context.status(404);
-                    if (checkExpense.getStatus() == 1) {
-                        context.result("can't delete status of approved or denied");
-                    } else if (checkExpense.getStatus() == 2) {
-                        context.result("no expense found");
-                    } else {
-                        context.result("issue deleting expense");
-                    }
+                    context.result(statusCode.get(checkExpense.getStatus()));
                 }
             } catch (NumberFormatException exception) {
                 context.status(404);
-                context.result("invalid data type");
+                context.result(statusCode.get(6));
             }
         });
 

@@ -7,6 +7,7 @@ import dev.colin.utilities.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
@@ -39,7 +40,7 @@ public class UserDAOImpl implements UserDAO {
             String message = e.getMessage();
             String method = "getUsers()";
             Logger.log(message,LogLevel.ERROR,method,"UserDAOImpl");
-            return null;
+            return Collections.emptyList();
         }
 
     }

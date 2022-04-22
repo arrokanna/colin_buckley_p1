@@ -39,9 +39,9 @@ public class UserServiceImpl implements UserService {
         User checkUser = this.userDAO.getUserById(user.getId());
 
         if (checkUser != null) {
-            return new CheckBoolean(this.userDAO.updateUser(user),2);
+            return new CheckBoolean(this.userDAO.updateUser(user),1);
         } else {
-            return new CheckBoolean(false,1);
+            return new CheckBoolean(false,2);
         }
 
 
@@ -51,9 +51,9 @@ public class UserServiceImpl implements UserService {
     public CheckBoolean delete(int userId) {
         User checkUser = this.userDAO.getUserById(userId);
         if (checkUser != null) {
-            return new CheckBoolean(this.userDAO.deleteUser(userId),2);
+            return new CheckBoolean(this.userDAO.deleteUser(userId),1);
         } else {
-            return new CheckBoolean(false, 1);
+            return new CheckBoolean(false, 2);
         }
 
     }

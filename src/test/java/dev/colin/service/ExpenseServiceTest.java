@@ -5,6 +5,7 @@ import dev.colin.entities.Expense;
 import dev.colin.services.ExpenseService;
 import dev.colin.services.ExpenseServiceImpl;
 import dev.colin.utilities.CheckBoolean;
+import dev.colin.utilities.CheckExpense;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -22,7 +23,9 @@ public class ExpenseServiceTest {
         newExpense.setAmount(3.99);
         newExpense.setStatus(3);
 
-        testExpense = expenseService.createExpense(newExpense);
+        CheckExpense checkExpense = expenseService.createExpense(newExpense);
+
+        testExpense = checkExpense.getExpense();
 
         Assertions.assertNotEquals(0,testExpense.getId());
 

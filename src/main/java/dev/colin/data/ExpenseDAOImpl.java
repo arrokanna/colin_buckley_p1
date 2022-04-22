@@ -7,6 +7,7 @@ import dev.colin.utilities.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExpenseDAOImpl implements ExpenseDAO {
@@ -41,7 +42,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             String message = e.getMessage();
             String method = "expenses()";
             Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
-            return null;
+            return Collections.emptyList();
         }
 
     }
@@ -78,7 +79,7 @@ public class ExpenseDAOImpl implements ExpenseDAO {
             String message = e.getMessage();
             String method = "expenseByUser(int: " + userId + " )";
             Logger.log(message, LogLevel.ERROR,method,"ExpenseDAOImpl");
-            return null;
+            return Collections.emptyList();
         }
 
     }
